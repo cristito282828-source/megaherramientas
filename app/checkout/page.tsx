@@ -36,7 +36,7 @@ export default function CheckoutPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitOrder = () => {
+  const handleSubmitOrder = async () => {
     if (!cart?.contents.nodes || itemCount === 0) return;
 
     // Validar campos requeridos
@@ -47,40 +47,43 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
 
-    const phoneNumber = process.env.NEXT_PUBLIC_PHONE_NUMBER || '56900000000';
+    try {
+      const response = await fetch('/api/whatsapp-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          email: formData.email,
+          telefono: formData.telefono,
+          direccion: formData.direccion,
+          ciudad: formData.ciudad,
+          region: formData.region,
+          metodoPago: formData.metodoPago,
+          items: cart.contents.nodes.map((item) => ({
+            productName: item.productName,
+            quantity: item.quantity,
+            priceDisplay: item.priceDisplay,
+            variationSize: item.variationSize
+          })),
+          total: cart.total
+        })
+      });
 
-    // Construir mensaje simplificado para evitar problemas con WhatsApp
-    let message = '*NUEVO PEDIDO - Ejemplo de Tienda*%0A%0A';
-    message += '*DATOS DEL CLIENTE*%0A';
-    message += `Nombre: ${formData.nombre}%0A`;
-    message += `Email: ${formData.email}%0A`;
-    message += `Telefono: ${formData.telefono}%0A%0A`;
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.error || 'Error al generar el link de WhatsApp');
+      }
 
-    message += '*DIRECCION DE ENVIO*%0A';
-    message += `${formData.direccion}, ${formData.ciudad}%0A`;
-    message += `Region: ${formData.region}%0A%0A`;
+      const { url } = await response.json();
+      window.open(url, '_blank');
 
-    message += '*PRODUCTOS*%0A';
-    cart.contents.nodes.forEach((item, index) => {
-      const productName = item.productName;
-      const quantity = item.quantity;
-      const price = item.priceDisplay;
-      const sizeInfo = item.variationSize ? ` (${item.variationSize} ml)` : '';
-      message += `${quantity}x ${productName}${sizeInfo} - ${price}%0A`;
-    });
-
-    message += `%0A*TOTAL: ${cart.total}*%0A`;
-    message += `Pago: ${formData.metodoPago === 'transferencia' ? 'Transferencia' : 'Webpay'}%0A%0A`;
-    message += 'Por favor confirmar mi pedido. Gracias!';
-
-    // Abrir WhatsApp directamente sin encoding adicional
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-
-    window.open(whatsappUrl, '_blank');
-
-    // Mostrar confirmación
-    setOrderComplete(true);
-    setIsSubmitting(false);
+      setOrderComplete(true);
+    } catch (error: any) {
+      console.error('Error al enviar pedido:', error);
+      alert(error.message || 'No se pudo enviar el pedido. Intenta nuevamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (orderComplete) {
