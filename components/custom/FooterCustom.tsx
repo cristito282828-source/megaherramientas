@@ -124,19 +124,19 @@ export default function Footer() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-amber-400 flex-shrink-0" />
-                <a href="tel:+56900000000" className="text-gray-400 hover:text-amber-400 transition-colors duration-200">
-                  +56 9 0000 0000
+                <a href="https://wa.me/573227725160" className="text-gray-400 hover:text-amber-400 transition-colors duration-200">
+                  +57 322 772 51 60
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-amber-400 flex-shrink-0" />
                 <a href="mailto:contacto@megaherramientas.cl" className="text-gray-400 hover:text-amber-400 transition-colors duration-200">
-                  contacto@megaherramientas.cl
+                  contacto@megaherramientas.com.co
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-amber-400 flex-shrink-0" />
-                <span className="text-gray-400">Chile</span>
+                <span className="text-gray-400">Colombia</span>
               </div>
             </div>
           </div>

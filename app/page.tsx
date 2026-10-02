@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { WooNavbar } from '@/components/layout/navbar/woo-navbar';
 import SeasonalBanner from '@/components/custom/SeasonalBanner';
 import FooterCustom from '@/components/custom/FooterCustom';
+import TikTokFeed from '@/components/custom/TikTokFeed';
 
 export const metadata = {
   title: 'Lorem Ipsum Store',
@@ -134,6 +135,9 @@ export default async function HomePage() {
             </div>
           )}
         </div>
+
+        {/* Sección de TikToks */}
+        <TikTokFeed />
       </main>
       <FooterCustom />
     </>

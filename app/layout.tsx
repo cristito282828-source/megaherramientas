@@ -3,6 +3,7 @@ import './globals.css';
 import { RecentlyViewedProvider } from '@/components/providers/RecentlyViewedProvider';
 import { CartProvider } from '@/components/providers/CartProvider';
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import N8nChatWidget from '@/components/custom/N8nChatWidget';
 import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/structured-data';
 import { JsonLdScript } from '@/lib/json-ld-script';
 
@@ -54,6 +55,9 @@ export default function RootLayout({
           </RecentlyViewedProvider>
           <CartDrawer />
         </CartProvider>
+
+        {/* Chatbot flotante - esquina inferior derecha */}
+        <N8nChatWidget />
       </body>
     </html>
   );
