@@ -1,4 +1,4 @@
-import { tiktokVideos, type TikTokVideo } from '@/lib/tiktok';
+import { TIKTOK_PROFILE_URL, tiktokVideos, type TikTokVideo } from '@/lib/tiktok';
 import { TikTokEmbed } from './TikTokEmbed';
 
 interface TikTokFeedProps {
@@ -14,12 +14,11 @@ async function fetchTikTokEmbed(url: string) {
   try {
     const res = await fetch(
       `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`,
-      { next: { revalidate: 3600 } } // cache 1h
+      { next: { revalidate: 3600 } }
     );
     if (!res.ok) return null;
     return await res.json();
-  } catch (error) {
-    console.error('Error fetching TikTok oEmbed for:', url, error);
+  } catch {
     return null;
   }
 }
@@ -27,19 +26,12 @@ async function fetchTikTokEmbed(url: string) {
 export default async function TikTokFeed({
   videos = tiktokVideos,
   title = 'Síguenos en TikTok',
-  subtitle = 'Mira nuestros últimos videos, ofertas y proyectos en acción.',
+  subtitle = 'Mira herramientas en acción, ofertas y proyectos de MegaHerramientas.',
 }: TikTokFeedProps) {
-  // Fetch todos los embeds en paralelo
-  const embeds = await Promise.all(videos.map((v) => fetchTikTokEmbed(v.url)));
-
-  // Filtrar videos que no se pudieron cargar
+  const embeds = await Promise.all(videos.map((video) => fetchTikTokEmbed(video.url)));
   const validVideos = videos
-    .map((video, i) => ({ video, embed: embeds[i] }))
+    .map((video, index) => ({ video, embed: embeds[index] }))
     .filter((item): item is { video: TikTokVideo; embed: any } => item.embed !== null);
-
-  if (validVideos.length === 0) {
-    return null;
-  }
 
   return (
     <section className="bg-black text-white py-12 sm:py-16 lg:py-20 border-t border-gray-800">
@@ -62,23 +54,28 @@ export default async function TikTokFeed({
           <p className="text-gray-400 max-w-2xl mx-auto">{subtitle}</p>
         </div>
 
-        {/* Grid de TikToks */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {validVideos.map(({ video, embed }, index) => (
-            <TikTokEmbed
-              key={`${video.url}-${index}`}
-              embedHtml={embed.html}
-              authorName={embed.author_name}
-              description={video.description || embed.title}
-              videoUrl={video.url}
-            />
-          ))}
-        </div>
+        {validVideos.length > 0 ? (
+          <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {validVideos.map(({ video, embed }, index) => (
+              <TikTokEmbed
+                key={`${video.url}-${index}`}
+                embedHtml={embed.html}
+                authorName="megatornillos"
+                description={video.description}
+                videoUrl={video.url}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-gray-800 bg-gray-950 p-8 text-center text-gray-400">
+            TikTok no está disponible en este momento. Puedes ver todos los videos en nuestra cuenta.
+          </div>
+        )}
 
         {/* CTA */}
         <div className="text-center mt-10">
           <a
-            href="https://www.tiktok.com/"
+            href={TIKTOK_PROFILE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-amber-400 text-black font-semibold rounded-lg hover:bg-amber-300 transition-colors"

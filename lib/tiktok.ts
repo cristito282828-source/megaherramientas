@@ -12,21 +12,25 @@
 export interface TikTokVideo {
   /** URL completa del video de TikTok */
   url: string;
-  /** Descripción opcional (se muestra debajo del video) */
+  /** Descripción mostrada debajo del mockup */
   description?: string;
+  /** Imagen representativa mientras se obtienen los videos reales */
+  thumbnail?: string;
 }
+
+export const TIKTOK_PROFILE_URL = 'https://www.tiktok.com/@megatornillos';
 
 export const tiktokVideos: TikTokVideo[] = [
   {
-    url: 'https://www.tiktok.com/@tiktok/video/7236990862590558506',
-    description: 'Ejemplo de video — reemplazá esta URL con tus TikToks',
+    url: 'https://www.tiktok.com/@megatornillos/video/7702976589302123782',
+    description: 'Super Kote White Lithium Complex',
   },
   {
-    url: 'https://www.tiktok.com/@tiktok/video/7236990862590558506',
-    description: 'Otro video importante de tu marca',
+    url: 'https://www.tiktok.com/@megatornillos/video/7601635309540904200',
+    description: 'Herramientas MegaHerramientas',
   },
   {
-    url: 'https://www.tiktok.com/@tiktok/video/7236990862590558506',
-    description: 'Tercer video destacado',
+    url: 'https://www.tiktok.com/@megatornillos/video/7547160047491501368',
+    description: 'Novedades y soluciones para taller',
   },
 ];
