@@ -3,6 +3,7 @@ import { WooNavbar } from '@/components/layout/navbar/woo-navbar';
 import SeasonalBanner from '@/components/custom/SeasonalBanner';
 import FooterCustom from '@/components/custom/FooterCustom';
 import TikTokFeed from '@/components/custom/TikTokFeed';
+import CategorySectionDynamic from '@/components/custom/CategorySectionDynamic';
 
 export const metadata = {
   title: 'Lorem Ipsum Store',
@@ -55,12 +56,15 @@ async function getAllProducts() {
 
 export default async function HomePage() {
   const products = await getAllProducts();
+  const { getCollections } = await import('@/lib/woocommerce');
+  const collections = await getCollections();
 
   return (
     <>
       <WooNavbar />
       <main id="main-content" className="min-h-screen bg-gray-50 pt-24">
         <SeasonalBanner />
+        <CategorySectionDynamic collections={collections} />
 
         {/* Sección de productos */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -89,12 +93,12 @@ export default async function HomePage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3 xl:grid-cols-4">
               {products.map((product: any) => (
                 <Link
                   key={product.id}
                   href={`/product/${product.slug}`}
-                  className="group block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+                  className="group block w-[78vw] max-w-[280px] shrink-0 snap-start overflow-hidden rounded-lg bg-white shadow-md transition-all duration-300 hover:shadow-xl sm:w-auto sm:max-w-none sm:shrink"
                 >
                   {/* Imagen */}
                   <div className="relative aspect-square overflow-hidden bg-gray-100">

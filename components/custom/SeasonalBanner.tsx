@@ -44,7 +44,7 @@ export default function SeasonalBanner() {
         {slides.map((slide) => (
           <div
             key={slide.id}
-            className="relative h-[40vh] min-h-[280px] sm:h-[55vh] sm:min-h-[420px] lg:h-[70vh] lg:min-h-[520px] p-4 sm:p-6 lg:p-8"
+            className="relative h-[32vh] min-h-[220px] max-h-[320px] p-2 sm:h-[55vh] sm:min-h-[420px] sm:max-h-none sm:p-6 lg:h-[70vh] lg:min-h-[520px] lg:p-8"
           >
             <div className="relative h-full w-full overflow-hidden rounded-lg">
               <Image

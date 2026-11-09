@@ -1,5 +1,5 @@
 import { TIKTOK_PROFILE_URL, tiktokVideos, type TikTokVideo } from '@/lib/tiktok';
-import { TikTokEmbed } from './TikTokEmbed';
+import { TikTokCarousel } from './TikTokCarousel';
 
 interface TikTokFeedProps {
   /** Lista de TikToks a mostrar (por defecto usa la lista de lib/tiktok.ts) */
@@ -55,17 +55,13 @@ export default async function TikTokFeed({
         </div>
 
         {validVideos.length > 0 ? (
-          <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {validVideos.map(({ video, embed }, index) => (
-              <TikTokEmbed
-                key={`${video.url}-${index}`}
-                embedHtml={embed.html}
-                authorName="megatornillos"
-                description={video.description}
-                videoUrl={video.url}
-              />
-            ))}
-          </div>
+          <TikTokCarousel
+            items={validVideos.map(({ video, embed }) => ({
+              url: video.url,
+              description: video.description,
+              embedHtml: embed.html,
+            }))}
+          />
         ) : (
           <div className="rounded-xl border border-gray-800 bg-gray-950 p-8 text-center text-gray-400">
             TikTok no está disponible en este momento. Puedes ver todos los videos en nuestra cuenta.

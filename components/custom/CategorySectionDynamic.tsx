@@ -183,18 +183,24 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
   };
 
   return (
-    <div className="bg-[#364e41] py-8 sm:py-10 lg:py-12 overflow-hidden">
+    <div className="overflow-hidden bg-amber-400 py-8 sm:py-10 lg:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 sm:gap-8 lg:gap-12 items-center">
 
           {/* Caption - Izquierda */}
           <div className="lg:col-span-2 space-y-6">
-            <h2 className="font-belleza text-2xl sm:text-3xl lg:text-5xl font-light tracking-wide mb-4 sm:mb-6 lg:mb-8 leading-tight text-white text-center lg:text-left">
+            <h2 className="font-belleza text-2xl sm:text-3xl lg:text-5xl font-light tracking-wide mb-4 sm:mb-6 lg:mb-8 leading-tight text-black text-center lg:text-left">
               Explora más
             </h2>
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-white text-sm font-semibold uppercase tracking-[0.22em]">
-            Logo
-          </div>
+            <div className="relative mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-black bg-transparent">
+              <Image
+                src="/logo-megaherramientas.png"
+                alt="MegaHerramientas"
+                fill
+                sizes="96px"
+                className="object-contain grayscale brightness-0"
+              />
+            </div>
           </div>
 
           {/* Slider - Derecha */}
@@ -285,7 +291,7 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
           style={{
             width: isActive ? '40px' : '20px', // activo más largo
             height: '2px',
-            backgroundColor: isActive ? '#ffffff' : 'rgba(255,255,255,0.4)',
+            backgroundColor: isActive ? '#000000' : 'rgba(0,0,0,0.35)',
             transition: 'all 0.3s ease',
           }}
         />
@@ -297,7 +303,7 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
 
 
               {/* Indicador de swipe solo en mobile */}
-              <div className="block sm:hidden text-center mt-4 text-white/60 text-xs animate-pulse">
+              <div className="block sm:hidden text-center mt-4 text-black/60 text-xs animate-pulse">
                 ← Desliza para ver más →
               </div>
             </div>

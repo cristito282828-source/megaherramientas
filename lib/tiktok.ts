@@ -31,6 +31,22 @@ export const tiktokVideos: TikTokVideo[] = [
   },
   {
     url: 'https://www.tiktok.com/@megatornillos/video/7547160047491501368',
-    description: 'Novedades y soluciones para taller',
+    description: 'Oferta en torquímetro',
+  },
+  {
+    url: 'https://www.tiktok.com/@megatornillos/video/7692581097154039041',
+    description: 'Herramientas especiales para taller automotriz',
+  },
+  {
+    url: 'https://www.tiktok.com/@megatornillos/video/7689893421820939538',
+    description: 'Taladros y herramientas para mecánicos',
+  },
+  {
+    url: 'https://www.tiktok.com/@megatornillos/video/7684818502380735762',
+    description: 'Juegos especiales de herramientas',
+  },
+  {
+    url: 'https://www.tiktok.com/@megatornillos/video/7684402352131935496',
+    description: 'Herramientas para hacer más fácil tu taller',
   },
 ];
