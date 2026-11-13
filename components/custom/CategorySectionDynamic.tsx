@@ -1,7 +1,6 @@
 'use client'
 import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from 'next/image';
 
 import Link from 'next/link';
 
@@ -9,12 +8,6 @@ interface Collection {
   title: string;
   handle: string;
   path: string;
-  image?: {
-    url: string;
-    altText?: string;
-    width?: number;
-    height?: number;
-  };
 }
 
 interface CategorySectionDynamicProps {
@@ -25,34 +18,13 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Mapeo de imágenes estáticas por categoría (búsqueda flexible)
-  const getCategoryImage = (handle: string): string => {
-    const handleLower = handle.toLowerCase();
-
-    // Mapeo de palabras clave a imágenes
-    if (handleLower.includes('cinturon')) return '/cinturones.webp';
-    if (handleLower.includes('gorra')) return '/gorras.webp';
-    if (handleLower.includes('tarjetero') || handleLower.includes('billetera')) return '/tarjeteros.webp';
-    if (handleLower.includes('saco')) return '/sacos.webp';
-    if (handleLower.includes('maleta')) return '/sacos.webp';
-    if (handleLower.includes('media')) return '/tarjeteros.webp';
-    if (handleLower.includes('camiseta')) return '/sacos.webp';
-    if (handleLower.includes('combo')) return '/cinturones.webp';
-
-    return '/sacos.webp';
-  };
-
-  // Filtrar colecciones válidas y agregar imágenes
+  // Filtrar colecciones válidas
   const validCollections = collections
     .filter(c =>
       c.handle !== '' &&
       !c.handle.toLowerCase().includes('hidden') &&
       c.title.toLowerCase() !== 'all'
-    )
-    .map(c => ({
-      ...c,
-      imageSrc: c.image?.url || getCategoryImage(c.handle)
-    }));
+    );
 
   // Calcular cuántas cards se ven a la vez según el viewport
   const getVisibleCards = () => {
@@ -183,24 +155,16 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
   };
 
   return (
-    <div className="overflow-hidden bg-amber-400 py-8 sm:py-10 lg:py-12">
+    <div className="overflow-hidden bg-black py-8 sm:py-10 lg:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 sm:gap-8 lg:gap-12 items-center">
 
           {/* Caption - Izquierda */}
-          <div className="lg:col-span-2 space-y-6">
-            <h2 className="font-belleza text-2xl sm:text-3xl lg:text-5xl font-light tracking-wide mb-4 sm:mb-6 lg:mb-8 leading-tight text-black text-center lg:text-left">
+          <div className="lg:col-span-2">
+            <h2 className="font-belleza text-2xl sm:text-3xl lg:text-5xl font-light tracking-wide leading-tight text-white text-center lg:text-left">
               Explora más
             </h2>
-            <div className="relative mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full border-2 border-black bg-transparent">
-              <Image
-                src="/logo-megaherramientas.png"
-                alt="MegaHerramientas"
-                fill
-                sizes="96px"
-                className="object-contain grayscale brightness-0"
-              />
-            </div>
+            <div className="mx-auto mt-4 h-1 w-14 bg-amber-400 lg:mx-0" />
           </div>
 
           {/* Slider - Derecha */}
@@ -222,28 +186,23 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
                     >
                       <Link
                         href={category.path}
-                        className="group relative block active:scale-[0.98] transition-transform duration-150"
+                        className="group block active:scale-[0.98] transition-transform duration-150"
                       >
-                      <div className="relative aspect-[4/6] w-full overflow-hidden bg-gray-200 rounded-sm">
-                          <Image
-                            src={category.imageSrc}
-                            alt={`Categoría ${category.title} - Explora productos de ${category.title}`}
-                            fill
-                            className="object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                          />
-
-                          {/* Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent group-hover:from-black/70 group-active:from-black/75 transition-all duration-300"></div>
-
-                          {/* Contenido de texto */}
-                          <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 lg:p-10">
-                            <h3 className="text-2xl sm:text-3xl font-semibold text-white tracking-wider transform group-hover:scale-105 transition-transform duration-300">
+                        <div className="flex aspect-[4/3] w-full flex-col justify-between rounded-sm border border-white/10 border-t-4 border-t-amber-400 bg-gradient-to-br from-zinc-800 via-zinc-900 to-black p-5 transition-all duration-200 group-hover:border-amber-400/70 group-hover:shadow-lg group-hover:shadow-amber-400/10 sm:p-6">
+                          <div>
+                            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
+                              Categoría
+                            </span>
+                            <div className="mt-3 h-px w-10 bg-amber-400/70 transition-all duration-200 group-hover:w-16" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-semibold tracking-wide text-white sm:text-2xl">
                               {category.title}
                             </h3>
-                            <p className="text-white text-sm sm:text-base mt-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
-                              Explorar →
-                            </p>
+                            <span className="mt-3 flex items-center gap-2 text-sm font-medium text-amber-400 transition-colors group-hover:text-amber-300">
+                              Ver categoría
+                              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </span>
                           </div>
                         </div>
                       </Link>
@@ -255,18 +214,18 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
               {/* Botones de navegación - Siempre visibles, navegación infinita */}
               <button
                 onClick={scrollPrev}
-                className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 z-30 hover:scale-110 min-w-[44px] min-h-[44px] items-center justify-center"
+                className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-zinc-800 border border-amber-400/50 p-3 rounded-full shadow-lg transition-all duration-300 z-30 hover:scale-110 min-w-[44px] min-h-[44px] items-center justify-center"
                 aria-label="Anterior"
               >
-                <ChevronLeft className="h-6 w-6 text-gray-900" />
+                <ChevronLeft className="h-6 w-6 text-amber-400" />
               </button>
 
               <button
                 onClick={scrollNext}
-                className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 z-30 hover:scale-110 min-w-[44px] min-h-[44px] items-center justify-center"
+                className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-black/90 hover:bg-zinc-800 border border-amber-400/50 p-3 rounded-full shadow-lg transition-all duration-300 z-30 hover:scale-110 min-w-[44px] min-h-[44px] items-center justify-center"
                 aria-label="Siguiente"
               >
-                <ChevronRight className="h-6 w-6 text-gray-900" />
+                <ChevronRight className="h-6 w-6 text-amber-400" />
               </button>
 
 {/* Dots de navegación */}
@@ -291,7 +250,7 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
           style={{
             width: isActive ? '40px' : '20px', // activo más largo
             height: '2px',
-            backgroundColor: isActive ? '#000000' : 'rgba(0,0,0,0.35)',
+            backgroundColor: isActive ? '#fbbf24' : 'rgba(255,255,255,0.35)',
             transition: 'all 0.3s ease',
           }}
         />
@@ -303,7 +262,7 @@ export default function CategorySectionDynamic({ collections }: CategorySectionD
 
 
               {/* Indicador de swipe solo en mobile */}
-              <div className="block sm:hidden text-center mt-4 text-black/60 text-xs animate-pulse">
+              <div className="block sm:hidden text-center mt-4 text-amber-400/70 text-xs animate-pulse">
                 ← Desliza para ver más →
               </div>
             </div>
