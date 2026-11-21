@@ -32,7 +32,7 @@ export function TikTokCarousel({ items }: TikTokCarouselProps) {
         type="button"
         onClick={() => scroll(-1)}
         className="absolute left-0 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 rounded-full bg-amber-400 p-3 text-black shadow-lg transition hover:bg-amber-300 lg:block"
-        aria-label="Ver TikToks anteriores"
+        aria-label="Ver TikToks anteriores "
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
