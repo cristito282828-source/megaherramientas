@@ -23,7 +23,9 @@ Tienda de e-commerce de perfumería construida con Next.js 15 y WooCommerce.
 - **Precios CLP**: Formato chileno con separadores de miles
 
 ### ✅ Funcionalidades
-- **Checkout WhatsApp**: Proceso de compra vía WhatsApp
+- **Pedidos en WooCommerce**: Registra pedidos pendientes sin cobrar mientras se configura Wompi
+- **Cotización por WhatsApp**: Envía la solicitud con productos y dirección sin crear un pedido
+- **Dirección en Colombia**: Selectores dependientes de departamento y municipio
 - **Productos vistos**: Tracking de productos visitados
 - **Stock en tiempo real**: Indicadores de disponibilidad
 - **Páginas informativas**: Políticas, términos, envíos (Chile)
@@ -57,13 +59,15 @@ Crear archivo `.env.local`:
 ```env
 # WooCommerce GraphQL API
 NEXT_PUBLIC_WOOCOMMERCE_URL=https://tu-sitio.com
-NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY=tu_consumer_key
-NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET=tu_consumer_secret
+WOOCOMMERCE_CONSUMER_KEY=tu_consumer_key
+WOOCOMMERCE_CONSUMER_SECRET=tu_consumer_secret
 
 # Configuración del sitio
 NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
-NEXT_PUBLIC_PHONE_NUMBER=56946152919
+PHONE_NUMBER=56946152919
 ```
+
+Las credenciales REST de WooCommerce son privadas y solo deben configurarse en el entorno del servidor. No uses el prefijo `NEXT_PUBLIC_` para claves o secretos.
 
 ### Ejecutar en Desarrollo
 
@@ -193,7 +197,7 @@ El proyecto puede desplegarse en cualquier plataforma que soporte Next.js:
 - **/search/[collection]** - Páginas de categorías
 - **/product/[slug]** - Páginas individuales de producto
 - **/cart** - Carrito de compras
-- **/checkout** - Checkout vía WhatsApp
+- **/checkout** - Crear pedidos pendientes en WooCommerce o solicitar una cotización por WhatsApp
 
 ### Páginas Informativas
 - **/politica-envios** - Política de envíos (Chile)
@@ -210,7 +214,7 @@ El carrito utiliza **localStorage** para persistencia:
 - ✅ Persistencia entre sesiones
 - ✅ Actualizaciones optimistas
 - ✅ Soporte para cantidades y eliminación
-- ✅ Checkout vía WhatsApp
+- ✅ Cotización por WhatsApp (no crea pedido)
 
 ## 🔍 Búsqueda AJAX
 

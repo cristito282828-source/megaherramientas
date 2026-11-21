@@ -149,7 +149,7 @@ export function ProductDescriptionWoo({ product }: ProductDescriptionWooProps) {
       return;
     }
 
-    const productId = selectedVariation?.databaseId || product.databaseId || product.id;
+    const productId = product.databaseId || product.id;
 
     // Preparar datos del producto para evitar fetching innecesario
     const priceStr = selectedVariation?.price || product.price;

@@ -19,16 +19,20 @@
 
 ## Descripción del Proyecto
 
-**Pinneacle Perfumería** es una tienda de e-commerce construida con Next.js 15 y WooCommerce como backend. El proyecto permite a los usuarios explorar productos de perfumería, agregarlos al carrito de compras local, y finalizar la compra a través de WhatsApp.
+**Pinneacle Perfumería** es una tienda de e-commerce construida con Next.js 15 y WooCommerce como backend. El proyecto permite explorar productos, mantener un carrito local, registrar pedidos pendientes en WooCommerce y solicitar cotizaciones por WhatsApp. El pago en línea con Wompi está pendiente de configuración.
 
 ### Características Principales:
+
 - 🛒 Carrito de compras local con localStorage
 - 🔍 Búsqueda AJAX en tiempo real
 - 📱 Diseño responsive
 - 🎨 Layout de 4 columnas para productos
 - 💰 Formato de precios en CLP (Pesos Chilenos)
 - 📦 Productos variables con variaciones
-- 🔗 Checkout via WhatsApp
+- 🔗 Cotización por WhatsApp (no crea un pedido)
+- 📋 Pedidos de invitado registrados como pendientes y sin cobro
+- 💳 Pago en línea pendiente de configuración y pruebas con Wompi
+- 📍 Dirección con departamentos y municipios de Colombia
 - 📰 Páginas informativas (políticas, términos, etc.)
 
 ---
@@ -36,6 +40,7 @@
 ## Stack Tecnológico
 
 ### Frontend
+
 - **Next.js 15** - Framework de React con App Router
 - **React 19** - Biblioteca de UI
 - **TypeScript** - Tipado estático
@@ -46,10 +51,12 @@
 - **React Slick** - Carrusel para banners
 
 ### Backend
+
 - **WooCommerce GraphQL API** - Gestión de productos
 - **Next.js API Routes** - Endpoints personalizados
 
 ### Herramientas de Desarrollo
+
 - **ESLint** - Linting
 - **Prettier** - Formateo de código
 - **TypeScript** - Tipado
@@ -100,12 +107,14 @@ Crear archivo `.env.local`:
 ```env
 # WooCommerce GraphQL
 NEXT_PUBLIC_WOOCOMMERCE_URL=https://tu-sitio.com
-NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_KEY=tu_consumer_key
-NEXT_PUBLIC_WOOCOMMERCE_CONSUMER_SECRET=tu_consumer_secret
+WOOCOMMERCE_CONSUMER_KEY=tu_consumer_key
+WOOCOMMERCE_CONSUMER_SECRET=tu_consumer_secret
 
 # Configuración opcional
 NEXT_PUBLIC_SITE_URL=https://tu-dominio.com
 ```
+
+Las credenciales REST se usan únicamente en rutas de servidor y nunca deben tener el prefijo `NEXT_PUBLIC_`. `/api/woocommerce-order` crea pedidos pendientes, vuelve a validar productos, variaciones, disponibilidad y precios en WooCommerce y no inicia cobros. La cotización de WhatsApp no crea un pedido. El pago en línea se habilitará cuando Wompi y el flujo de checkout headless estén configurados y probados.
 
 ### Instalación
 
@@ -130,6 +139,7 @@ pnpm start
 ### App Router (Next.js 15)
 
 El proyecto utiliza el nuevo App Router de Next.js 15 con:
+
 - **Server Components** por defecto para mejor performance
 - **Client Components** cuando se necesita interactividad ('use client')
 - **Server Actions** para mutaciones de datos
@@ -156,9 +166,11 @@ Providers (Context para estado global)
 ## Componentes Principales
 
 ### 1. WooNavbar
+
 **Ubicación**: `components/layout/navbar/woo-navbar-client.tsx`
 
 Navegación principal con:
+
 - Logo y enlaces
 - Menú de categorías con dropdown hover
 - Búsqueda AJAX con debouncing (300ms)
@@ -166,14 +178,17 @@ Navegación principal con:
 - Menú móvil
 
 **Características**:
+
 - Navbar fijo que cambia estilo al hacer scroll
 - Dropdown de categorías sin espacio (evita cierre al navegar)
 - Búsqueda en tiempo real con resultados dropdown
 
 ### 2. ProductDescriptionWoo
+
 **Ubicación**: `components/product/ProductDescriptionWoo.tsx`
 
 Muestra información detallada del producto:
+
 - Galería de imágenes
 - Selector de variaciones
 - Selector de cantidad
@@ -182,39 +197,47 @@ Muestra información detallada del producto:
 - Indicador de stock
 
 **Características**:
+
 - Sticky en desktop
 - Formato CLP para precios
 - Validación de stock
 - Hover invertido en botón de compra
 
 ### 3. CartDrawer
+
 **Ubicación**: `components/cart/CartDrawer.tsx`
 
 Panel lateral del carrito:
+
 - Lista de productos
 - Controles de cantidad
 - Eliminación de productos
 - Subtotal
-- Botón de checkout a WhatsApp
+- Cotización por WhatsApp desde el checkout
 
 **Características**:
+
 - Animación de entrada/salida
 - Persistencia con localStorage
 - Actualización optimista
 
 ### 4. RecentlyViewedProducts
+
 **Ubicación**: `components/product/RecentlyViewed.tsx`
 
 Productos vistos recientemente:
+
 - Grid de 4 columnas (8 productos)
 - Fallback a productos destacados
 - Diseño consistente con catálogo
 - Persistencia en localStorage
 
 ### 5. BannerCarousel
+
 **Ubicación**: `components/custom/BannerCarousel.tsx`
 
 Carrusel de banners principales:
+
 - 3 banners en formato PNG
 - Navegación con dots
 - Auto-play configurable
@@ -225,14 +248,17 @@ Carrusel de banners principales:
 ## API Routes
 
 ### 1. Search API
+
 **Endpoint**: `/api/search`
 
 **Método**: GET
 
 **Query Params**:
+
 - `q` (string): Término de búsqueda (mínimo 2 caracteres)
 
 **Response**:
+
 ```typescript
 {
   products: [
@@ -250,11 +276,13 @@ Carrusel de banners principales:
 ```
 
 **Características**:
+
 - Formateo de precios CLP (con separadores de miles)
 - Máximo 8 resultados
 - Manejo de errores con respuesta vacía
 
 ### 2. GraphQL Proxy
+
 **Endpoint**: `/api/graphql`
 
 **Método**: POST
@@ -262,6 +290,7 @@ Carrusel de banners principales:
 **Descripción**: Proxy para WooCommerce GraphQL API
 
 **Características**:
+
 - Evita problemas de CORS
 - Cache de responses
 - Manejo de errores
@@ -290,32 +319,36 @@ interface CartItem {
 }
 
 // localStorage key
-const CART_KEY = 'pinneacle_cart';
+const CART_KEY = "pinneacle_cart";
 ```
 
 ### Funcionalidades
 
 1. **Agregar al carrito**:
+
    - Validación de variaciones
    - Actualización optimista
    - Notificación toast
 
 2. **Eliminar producto**:
+
    - Confirmación opcional
    - Recálculo de subtotal
 
 3. **Cambiar cantidad**:
+
    - Validación de stock
    - Incrementos/decrementos
 
 4. **Checkout**:
-   - Redirección a WhatsApp
+   - Crear pedido pendiente en WooCommerce, sin procesar pago
+   - Enviar cotización independiente por WhatsApp; no crea pedido ni procesa pago
    - Formato del mensaje:
      ```
-     Hola, quiero comprar:
+     Solicitud de cotización:
      - Producto 1 (x2)
      - Producto 2 (x1)
-     Total: $XX.XXX
+     Dirección y datos de contacto
      ```
 
 ### CartProvider
@@ -323,6 +356,7 @@ const CART_KEY = 'pinneacle_cart';
 **Ubicación**: `components/providers/CartProvider.tsx`
 
 Context provider que gestiona:
+
 - Estado del carrito
 - Operaciones CRUD
 - Persistencia en localStorage
@@ -356,7 +390,7 @@ interface WooProduct {
   price: string;
   regularPrice?: string;
   salePrice?: string;
-  stockStatus: 'IN_STOCK' | 'OUT_OF_STOCK';
+  stockStatus: "IN_STOCK" | "OUT_OF_STOCK";
   image: {
     sourceUrl: string;
     altText?: string;
@@ -378,14 +412,14 @@ Los precios de WooCommerce vienen en formatos mixtos. El proyecto normaliza a CL
 // Función de formateo
 const formatCLP = (amount: string | number): string => {
   // Limpiar: remover puntos y comas
-  const num = String(amount).replace(/\./g, '').replace(/,/g, '');
+  const num = String(amount).replace(/\./g, "").replace(/,/g, "");
   const parsed = parseFloat(num) || 0;
 
-  return new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
+  return new Intl.NumberFormat("es-CL", {
+    style: "currency",
+    currency: "CLP",
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(parsed);
 };
 
@@ -409,18 +443,18 @@ module.exports = {
     extend: {
       colors: {
         // Color corporativo
-        primary: '#101828',
+        primary: "#101828",
       },
       fontFamily: {
-        sans: ['Geist', 'sans-serif'],
-        belleza: ['Belleza', 'serif'],
-        moderat: ['Moderat', 'sans-serif'],
+        sans: ["Geist", "sans-serif"],
+        belleza: ["Belleza", "serif"],
+        moderat: ["Moderat", "sans-serif"],
       },
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/container-queries'),
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/container-queries"),
   ],
 };
 ```
@@ -428,8 +462,9 @@ module.exports = {
 ### Layouts de Productos
 
 **Grid de 4 columnas**:
+
 ```tsx
-className="grid grid-cols-2 lg:grid-cols-4 gap-6"
+className = "grid grid-cols-2 lg:grid-cols-4 gap-6";
 ```
 
 - **Mobile**: 2 columnas
@@ -439,7 +474,10 @@ className="grid grid-cols-2 lg:grid-cols-4 gap-6"
 ### Tarjetas de Producto
 
 ```tsx
-<Link href={`/product/${slug}`} className="group block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
+<Link
+  href={`/product/${slug}`}
+  className="group block bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
+>
   {/* Imagen 3:4 */}
   <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
     <img className="object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -450,9 +488,7 @@ className="grid grid-cols-2 lg:grid-cols-4 gap-6"
     <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
       Nombre del producto
     </h3>
-    <p className="text-lg text-gray-700 font-medium">
-      $XX.XXX
-    </p>
+    <p className="text-lg text-gray-700 font-medium">$XX.XXX</p>
   </div>
 </Link>
 ```
@@ -468,29 +504,34 @@ className="grid grid-cols-2 lg:grid-cols-4 gap-6"
 ## Scripts Disponibles
 
 ### Development
+
 ```bash
 pnpm dev          # Servidor de desarrollo en localhost:3000
 ```
 
 ### Build
+
 ```bash
 pnpm build        # Build de producción
 pnpm start        # Iniciar servidor de producción
 ```
 
 ### Linting
+
 ```bash
 pnpm lint         # Ejecutar ESLint
 pnpm lint:fix     # Auto-corregir problemas de ESLint
 ```
 
 ### Formateo
+
 ```bash
 pnpm prettier     # Formatear todo el código
 pnpm prettier:check  # Verificar formateo
 ```
 
 ### Test
+
 ```bash
 pnpm test         # Ejecutar prettier:check + lint
 ```
@@ -502,6 +543,7 @@ pnpm test         # Ejecutar prettier:check + lint
 ### 1. Componentes
 
 ✅ **Usar Server Components por defecto**:
+
 ```tsx
 // app/page.tsx - Server Component
 export default async function HomePage() {
@@ -511,8 +553,9 @@ export default async function HomePage() {
 ```
 
 ✅ **'use client' solo cuando es necesario**:
+
 ```tsx
-'use client';
+"use client";
 
 export function InteractiveComponent() {
   const [state, setState] = useState();
@@ -523,6 +566,7 @@ export function InteractiveComponent() {
 ### 2. Data Fetching
 
 ✅ **Async en Server Components**:
+
 ```tsx
 // Next.js 15: params es async
 export default async function Page({
@@ -536,12 +580,13 @@ export default async function Page({
 ```
 
 ✅ **Manejo de errores**:
+
 ```tsx
 try {
   const product = await getProduct(slug);
   return <ProductView product={product} />;
 } catch (error) {
-  console.error('Error:', error);
+  console.error("Error:", error);
   return <ErrorView />;
 }
 ```
@@ -549,6 +594,7 @@ try {
 ### 3. TypeScript
 
 ✅ **Definir interfaces para props**:
+
 ```tsx
 interface ProductCardProps {
   product: WooProduct;
@@ -561,13 +607,15 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 ```
 
 ✅ **Usar tipos de WooCommerce**:
+
 ```tsx
-import type { WooProduct, WooProductAttribute } from '@/lib/woocommerce/types';
+import type { WooProduct, WooProductAttribute } from "@/lib/woocommerce/types";
 ```
 
 ### 4. Estilos
 
 ✅ **Usar clases de Tailwind**:
+
 ```tsx
 // ✅ Bien
 <div className="flex items-center justify-between p-4 bg-white">
@@ -577,17 +625,19 @@ import type { WooProduct, WooProductAttribute } from '@/lib/woocommerce/types';
 ```
 
 ✅ **Usar colores del tema**:
+
 ```tsx
 // ✅ Bien
-className="bg-[#101828] hover:bg-[#1a2332]"
+className = "bg-[#101828] hover:bg-[#1a2332]";
 
 // ❌ Mal
-className="bg-blue-800"
+className = "bg-blue-800";
 ```
 
 ### 5. Performance
 
 ✅ **Optimizar imágenes**:
+
 ```tsx
 <Image
   src={product.image}
@@ -600,10 +650,11 @@ className="bg-blue-800"
 ```
 
 ✅ **Lazy loading de componentes**:
-```tsx
-import dynamic from 'next/dynamic';
 
-const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
+```tsx
+import dynamic from "next/dynamic";
+
+const HeavyComponent = dynamic(() => import("./HeavyComponent"), {
   loading: () => <p>Cargando...</p>,
 });
 ```
@@ -611,20 +662,25 @@ const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
 ### 6. Accesibilidad
 
 ✅ **Usar etiquetas semánticas**:
+
 ```tsx
 <nav>
   <ul>
-    <li><Link href="/">Inicio</Link></li>
+    <li>
+      <Link href="/">Inicio</Link>
+    </li>
   </ul>
 </nav>
 ```
 
 ✅ **Alt text en imágenes**:
+
 ```tsx
 <img src={product.image} alt={product.name} />
 ```
 
 ✅ **ARIA labels**:
+
 ```tsx
 <button aria-label="Abrir carrito">
   <CartIcon />
@@ -638,25 +694,33 @@ const HeavyComponent = dynamic(() => import('./HeavyComponent'), {
 ### Problemas Comunes
 
 #### 1. Productos no aparecen
+
 **Verificar**:
+
 - Conexión con WooCommerce API
 - Variables de entorno
 - Stock status en WooCommerce
 
 #### 2. Carrito no persiste
+
 **Verificar**:
+
 - localStorage habilitado en el navegador
 - Key correcta: `pinneacle_cart`
 - No hay errores en console
 
 #### 3. Búsqueda no funciona
+
 **Verificar**:
+
 - API route `/api/search` funciona
 - Query params correctos
 - Debouncing no interfiere
 
 #### 4. Build falla
+
 **Verificar**:
+
 ```bash
 pnpm lint         # Revisar errores de linting
 pnpm prettier:check  # Revisar formateo
